@@ -29,4 +29,7 @@ body {
   flex: 0 0 30%;
   justify-content: space-between;
   text-align: center;
+}
+.header .menu-block .menu-block__item-wrapper .icon-block .icon-block__item-img {
+  width: 30px;
 }/*# sourceMappingURL=Header.css.map */

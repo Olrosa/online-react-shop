@@ -33,6 +33,10 @@ body {
                 flex: 0 0 30%;
                 justify-content: space-between;
                 text-align: center;
+
+                .icon-block__item-img {
+                    width: 30px;
+                }
             }
         }
     }
