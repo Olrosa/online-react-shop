@@ -6,14 +6,16 @@ import './app.scss';
 
 const App = () => {
 
-    const {getProductsByCategory} = usePlatziService();
+    const {filterProducts} = usePlatziService();
 
     useEffect(() => {
         onRequest();
     }, [])
 
     const onRequest = () => {  
-        getProductsByCategory(2)
+        filterProducts({
+            title: 'olrosa'
+        })
             .then(res => console.log(res))
     }
 

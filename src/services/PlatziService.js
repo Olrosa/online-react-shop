@@ -1,158 +1,65 @@
 import { useHttp } from "../hooks/https.hook";
 
 const usePlatziService = () => {
-    const {request} = useHttp();
+    const { request } = useHttp();
 
     const _apiBase = 'https://api.escuelajs.co/api/v1/';
-    const _baseOffset = 0;
 
-    const getAllProducts = async () => {
-        const res = await request(`${_apiBase}products/`);
-        return res.map(_transformProduct);
-    }
-
-    const getProduct = async (id) => {
-        const res = await request(`${_apiBase}products/${id}`);
-        return _transformProduct(res);
-    }
-
-    const getProducts = async (offset = _baseOffset) => {
-        const res = await request(`${_apiBase}products?offset=${offset}&limit=10`);
-        return res.map(_transformProduct);
-    }
-
-    const getProductsByCategory = async (id) => {
-        const res = await request(`${_apiBase}categories/${id}/products`);
+    const createItem = async (endpoint, data) => {
+        const body = JSON.stringify(data);
+        const res = await request(`${_apiBase}${endpoint}`, 'POST', body);
         return res;
     }
 
-    const getAllCategories = async () => {
-        const res = await request(`${_apiBase}categories/`);
+    const updateItem = async (endpoint, id, data) => {
+        const body = JSON.stringify(data);
+        const res = await request(`${_apiBase}${endpoint}/${id}`, 'PUT', body);
         return res;
     }
 
-    const getCategory = async (id) => {
-        const res = await request(`${_apiBase}categories/${id}`);
+    const deleteItem = async (endpoint, id) => {
+        const res = await request(`${_apiBase}${endpoint}/${id}`, 'DELETE');
         return res;
     }
 
-    const getAllUsers = async () => {
-        const res = await request(`${_apiBase}users/`);
+    const getAllItems = async (endpoint) => {
+        const res = await request(`${_apiBase}${endpoint}`);
         return res;
     }
 
-    const getUser = async (id) => {
-        const res = await request(`${_apiBase}users/${id}`);
+    const getItem = async (endpoint, id) => {
+        const res = await request(`${_apiBase}${endpoint}/${id}`);
         return res;
     }
 
-    const addProduct = async (title, price, description, categoryId, images) => {
-        const body = JSON.stringify({
-            title,
-            price,
-            description,
-            categoryId,
-            images
-        });
-
-        const res = await request(`${_apiBase}products/`, 'POST', body);
+    const filterProducts = async (filters) => {
+        const query = new URLSearchParams(filters).toString();
+        const res = await request(`${_apiBase}products/?${query}`);
         return res;
-    }
-
-    const addCategory = async (name, image) => {
-        const body = JSON.stringify({name, image});
-
-        const res = await request(`${_apiBase}categories/`, 'POST', body);
-        return res;
-    }
-
-    const addUser = async (name, email, password, avatar) => {
-        const body = JSON.stringify({
-            name,
-            email,
-            password,
-            avatar
-        });
-
-        const res = await request(`${_apiBase}users/`, 'POST', body);
-        return res;
-    }
-
-    const updateProduct = async (id, updatedData) => {
-        const body = JSON.stringify(updatedData);
-
-        const res = await request(`${_apiBase}products/${id}`, 'PUT', body);
-        return res;
-    }
-
-    const updateCategory = async (id, updatedData) => {
-        const body = JSON.stringify(updatedData);
-
-        const res = await request(`${_apiBase}categories/${id}`, 'PUT', body);
-        return res;
-    }
-
-    const updateUser = async (id, updatedData) => {
-        const body = JSON.stringify(updatedData);
-
-        const res = await request(`${_apiBase}users/${id}`, 'PUT', body);
-        return res;
-    }
-
-    const deleteProduct = async (id) => {
-        const res = await request(`${_apiBase}products/${id}`, 'DELETE');
-        return res;
-    }
-
-    const deleteCategory = async (id) => {
-        const res = await request(`${_apiBase}categories/${id}`, 'DELETE');
-        return res;
-    }
-
-    const deleteUser = async (id) => {
-        const res = await request(`${_apiBase}users/${id}`, 'DELETE');
-        return res;
-    }
-
-    const checkEmail = async (email) => {
-        const body = JSON.stringify(email);
-
-        const res = await request(`${_apiBase}users/is-available`, 'POST', body);
-        return res;
-    }
-
-    const _transformProduct = (item) => {
-        return {
-            id: item.id,
-            title: item.title,
-            description: item.description ? item.description : 'There is no description for this product',
-            price: item.price,
-            category: item.category,
-            images: item.images
-        }
-    }
-
+    };
+    
+    
 
     return {
-        getAllProducts, 
-        getProduct, 
-        getProducts, 
-        getAllCategories, 
-        getCategory, 
-        getAllUsers, 
-        getUser, 
-        addProduct, 
-        deleteProduct, 
-        updateProduct, 
-        addUser, 
-        addCategory,
-        updateCategory,
-        updateUser,
-        deleteCategory,
-        deleteUser,
-        checkEmail,
-        getProductsByCategory
-    }
+        getAllProducts: () => getAllItems('products'),
+        getProduct: (id) => getItem('products', id),
+        getProductsByCategory: (id) => getAllItems(`categories/${id}/products`),
+        getAllCategories: () => getAllItems('categories'),
+        getCategory: (id) => getItem('categories', id),
+        getAllUsers: () => getAllItems('users'),
+        getUser: (id) => getItem('users', id),
+        addProduct: (data) => createItem('products', data),
+        updateProduct: (id, data) => updateItem('products', id, data),
+        deleteProduct: (id) => deleteItem('products', id),
+        addCategory: (data) => createItem('categories', data),
+        updateCategory: (id, data) => updateItem('categories', id, data),
+        deleteCategory: (id) => deleteItem('categories', id),
+        addUser: (data) => createItem('users', data),
+        updateUser: (id, data) => updateItem('users', id, data),
+        deleteUser: (id) => deleteItem('users', id),
+        checkEmail: (email) => createItem('users/is-available', { email }),
+        filterProducts
+    };
 }
 
 export default usePlatziService;
