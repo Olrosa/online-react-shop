@@ -38,12 +38,14 @@ const usePlatziService = () => {
         return res;
     };
     
-    
+    const getProductsByCategory = async (id, limit = 5, offset = 0) => {
+        const res = await request(`${_apiBase}categories/${id}/products?limit=${limit}&offset=${offset}`);
+        return res;
+    }
 
     return {
         getAllProducts: () => getAllItems('products'),
         getProduct: (id) => getItem('products', id),
-        getProductsByCategory: (id) => getAllItems(`categories/${id}/products`),
         getAllCategories: () => getAllItems('categories'),
         getCategory: (id) => getItem('categories', id),
         getAllUsers: () => getAllItems('users'),
@@ -58,6 +60,7 @@ const usePlatziService = () => {
         updateUser: (id, data) => updateItem('users', id, data),
         deleteUser: (id) => deleteItem('users', id),
         checkEmail: (email) => createItem('users/is-available', { email }),
+        getProductsByCategory,
         filterProducts
     };
 }

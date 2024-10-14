@@ -1,0 +1,11 @@
+.product {
+    width: calc(20% - 50px);
+    border-radius: 4px;
+    background-color: aqua;
+    height: 200px;
+    padding: 15px;
+    &__title {
+        font-size: 16px;
+        font-weight: 500;
+    }
+}

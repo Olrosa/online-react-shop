@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-
 import usePlatziService from '../../services/PlatziService';
+
+import ProductsList from '../productsList/ProductsList';
 
 import './app.scss';
 
@@ -13,15 +14,14 @@ const App = () => {
     }, [])
 
     const onRequest = () => {  
-        filterProducts({
-            title: 'olrosa'
-        })
-            .then(res => console.log(res))
+    
     }
 
     return (
         <>
-            <h1>Hello</h1>
+            <div className='wrapper'>
+                <ProductsList></ProductsList>
+            </div>
         </>
     )
 }
