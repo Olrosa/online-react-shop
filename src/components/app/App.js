@@ -1,19 +1,21 @@
-import Header from '../header/Header';
-import ProductsList from '../productsList/ProductsList';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+import { MainPage } from '../pages';
+
+import Header from "../header/Header";
 
 import './app.scss';
 
 const App = () => {
     return (
-        <>
+        <Router>
             <Header/>
             <main>
-                <div className='wrapper'>
-                    <ProductsList categoryId={2} />
-                    <ProductsList categoryId={3} />
-                </div>
+                <Routes>
+                    <Route path="/" element={<MainPage/>}/>
+                </Routes>
             </main>
-        </>
+        </Router>
     )
 }
 

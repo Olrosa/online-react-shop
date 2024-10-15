@@ -1,70 +1,88 @@
 import { useEffect, useState } from 'react';
 
 import ProductsListItem from '../productsListItem/ProductsListItem';
-import Spinner from '../spinner/Spinner';
+import SkeletonLoader from '../skeletonLoader/SkeletonLoader';
 
 import usePlatziService from '../../services/PlatziService';
 
 import './ProductsList.scss';
 
-const ProductsList = ({categoryId}) => {
+const ProductsList = ({ categoryId }) => {
+    const { getProductsByCategory, getCategory } = usePlatziService();
 
-    const {getProductsByCategory, getCategory} = usePlatziService();
-    
     const [categoryName, setCategoryName] = useState('');
     const [productsList, setProductsList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [offset, setOffset] = useState(0);
+    const [hasMore, setHasMore] = useState(true);
     const limit = 5;
 
     useEffect(() => {
-        onRequest();
-    }, [])
+        onRequest(false, limit + 1); // Запрашиваем на один элемент больше
+    }, []);
 
-    const onRequest = () => {  
-        Promise.all([getProductsByCategory(categoryId, limit, offset), getCategory(categoryId)])
-            .then(([products, category]) => {
-                setProductsList(products);
-                setCategoryName(category.name);
-                setLoading(false);
-            });
-    }
+    const onRequest = (isLoadMore = false, currentLimit = limit) => {
+        setLoading(true);
+
+        getProductsByCategory(categoryId, currentLimit, offset).then((products) => {
+            if (isLoadMore) {
+                setProductsList((prevProducts) => [...prevProducts, ...products.slice(0, limit)]);
+            } else {
+                setProductsList(products.slice(0, limit));
+            }
+
+            setLoading(false);
+            setOffset((prevOffset) => prevOffset + limit);
+            // Проверяем, есть ли больше элементов, чем limit
+            setHasMore(products.length > limit);
+        });
+
+        getCategory(categoryId).then((category) => {
+            setCategoryName(category.name);
+        });
+    };
 
     const loadMoreProducts = () => {
-        setLoading(true);
-        getProductsByCategory(categoryId, limit, offset + limit)
-            .then(newProducts => {
-                setProductsList(prevProducts => [...prevProducts, ...newProducts]);
-                setOffset(prevOffset => prevOffset + limit);
-                setLoading(false);
-            });
+        if (!hasMore) return;
+        onRequest(true);
     };
 
     function renderItems(arr) {
-        const items =  arr.map(item => {
-            return (
-                <>
-                    <ProductsListItem {...item} key={item.id}/>
-                </>
-            )
+        const items = arr.map((item) => {
+            return <ProductsListItem {...item} key={item.id} />;
         });
-        
-        return (
-            <div className="products__offer">
-                {items}
-            </div>
-        )
+
+        return <div className="products__offer">{items}</div>;
     }
 
     const items = renderItems(productsList);
 
     return (
-        <div className="products"> 
-            <h2 className="products__title">{categoryName}</h2>
-            {items}
-            {loading ? <Spinner/> : <button className="button button-more" onClick={loadMoreProducts} disabled={loading}>Load more</button>}
+        <div className="products">
+            <div className='wrapper'>
+                <h2 className="products__title">{categoryName}</h2>
+                {loading && productsList.length === 0 ? (
+                    <SkeletonLoader />
+                ) : (
+                    items
+                )}
+                {loading && productsList.length > 0 ? (
+                    <SkeletonLoader />
+                ) : (
+                    !loading &&
+                    hasMore && (
+                        <button
+                            className="button button-more"
+                            onClick={loadMoreProducts}
+                            disabled={loading}
+                        >
+                            Load more
+                        </button>
+                    )
+                )}
+            </div>
         </div>
-    )
-} 
+    );
+};
 
 export default ProductsList;
