@@ -60,8 +60,8 @@ const ProductsList = () => {
         <div className="products"> 
             <h2 className="products__title">{categoryName}</h2>
             {items}
-            <button className="products__button-more" onClick={loadMoreProducts} disabled={loading}>
-                {loading ? 'Загрузка...' : 'Загрузить больше'}
+            <button className="button button-more" onClick={loadMoreProducts} disabled={loading}>
+                {loading ? 'Loading...' : 'Load more'}
             </button>
         </div>
     )

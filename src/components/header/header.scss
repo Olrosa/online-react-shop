@@ -1,0 +1,45 @@
+@mixin flexible() {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.header {
+    width: 100%;
+    background-color: #FB11D9;
+    color: white;
+    &__menu {
+        max-width: 1170px;
+        margin: 0 auto;
+        @include flexible();
+        justify-content: space-between;
+        align-items: center;
+        &-offer {
+            flex: 0 0 30%;
+            margin: 3px;
+        }
+    }
+    &__logo {
+
+    }
+    &__search {
+        &-input {
+            
+        }
+        &-btn {
+
+        }
+    }
+    &__icon {
+        @include flexible();
+        flex: 0 0 30%;
+        justify-content: space-between;
+        text-align: center;
+        &-img {
+            width: 30px;
+        }
+        &-label {
+
+        }
+    }
+}
