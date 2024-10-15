@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import ProductsListItem from '../ProductsListItem/ProductsListItem';
+
+import ProductsListItem from '../productsListItem/ProductsListItem';
+import Spinner from '../spinner/Spinner';
 
 import usePlatziService from '../../services/PlatziService';
 
 import './ProductsList.scss';
 
-const ProductsList = () => {
+const ProductsList = ({categoryId}) => {
 
     const {getProductsByCategory, getCategory} = usePlatziService();
     
@@ -20,7 +22,7 @@ const ProductsList = () => {
     }, [])
 
     const onRequest = () => {  
-        Promise.all([getProductsByCategory(2, limit, offset), getCategory(2)])
+        Promise.all([getProductsByCategory(categoryId, limit, offset), getCategory(categoryId)])
             .then(([products, category]) => {
                 setProductsList(products);
                 setCategoryName(category.name);
@@ -30,7 +32,7 @@ const ProductsList = () => {
 
     const loadMoreProducts = () => {
         setLoading(true);
-        getProductsByCategory(2, limit, offset + limit)
+        getProductsByCategory(categoryId, limit, offset + limit)
             .then(newProducts => {
                 setProductsList(prevProducts => [...prevProducts, ...newProducts]);
                 setOffset(prevOffset => prevOffset + limit);
@@ -60,9 +62,7 @@ const ProductsList = () => {
         <div className="products"> 
             <h2 className="products__title">{categoryName}</h2>
             {items}
-            <button className="button button-more" onClick={loadMoreProducts} disabled={loading}>
-                {loading ? 'Loading...' : 'Load more'}
-            </button>
+            {loading ? <Spinner/> : <button className="button button-more" onClick={loadMoreProducts} disabled={loading}>Load more</button>}
         </div>
     )
 } 

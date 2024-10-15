@@ -9,7 +9,8 @@ const App = () => {
             <Header/>
             <main>
                 <div className='wrapper'>
-                    <ProductsList></ProductsList>
+                    <ProductsList categoryId={2} />
+                    <ProductsList categoryId={3} />
                 </div>
             </main>
         </>
