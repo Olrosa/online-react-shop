@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import ProductsListItem from '../productsListItem/ProductsListItem';
 import SkeletonLoader from '../skeletonLoader/SkeletonLoader';
@@ -9,6 +10,7 @@ import './ProductsList.scss';
 
 const ProductsList = ({ categoryId }) => {
     const { getProductsByCategory, getCategory } = usePlatziService();
+    const dispatch = useDispatch();
 
     const [categoryName, setCategoryName] = useState('');
     const [productsList, setProductsList] = useState([]);
