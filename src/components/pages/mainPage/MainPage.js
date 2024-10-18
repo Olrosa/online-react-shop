@@ -1,5 +1,5 @@
+import ProductsList from '../../productsList/ProductsList';
 
-import ProductsList from "../productsList/ProductsList";
 
 const MainPage = () => {
     return (

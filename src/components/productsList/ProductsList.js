@@ -9,7 +9,7 @@ import usePlatziService from '../../services/PlatziService';
 import './ProductsList.scss';
 
 const ProductsList = ({ categoryId }) => {
-    const { getProductsByCategory, getCategory } = usePlatziService();
+    const { getProductsByCategory, getCategory, getProduct } = usePlatziService();
     const dispatch = useDispatch();
 
     const [categoryName, setCategoryName] = useState('');
@@ -21,6 +21,7 @@ const ProductsList = ({ categoryId }) => {
 
     useEffect(() => {
         onRequest(false, limit + 1); // Запрашиваем на один элемент больше
+        
     }, []);
 
     const onRequest = async (isLoadMore = false, currentLimit = limit) => {
