@@ -23,25 +23,31 @@ const ProductsList = ({ categoryId }) => {
         onRequest(false, limit + 1); // Запрашиваем на один элемент больше
     }, []);
 
-    const onRequest = (isLoadMore = false, currentLimit = limit) => {
+    const onRequest = async (isLoadMore = false, currentLimit = limit) => {
         setLoading(true);
 
-        getProductsByCategory(categoryId, currentLimit, offset).then((products) => {
+        try {
+            const products = await getProductsByCategory(categoryId, currentLimit, offset);
             if (isLoadMore) {
                 setProductsList((prevProducts) => [...prevProducts, ...products.slice(0, limit)]);
             } else {
                 setProductsList(products.slice(0, limit));
             }
-
+    
+            setHasMore(products.length > limit);
+        } catch (error) {
+            console.error("Failed to fetch products:", error);
+        } finally {
             setLoading(false);
             setOffset((prevOffset) => prevOffset + limit);
-            // Проверяем, есть ли больше элементов, чем limit
-            setHasMore(products.length > limit);
-        });
-
-        getCategory(categoryId).then((category) => {
+        }
+    
+        try {
+            const category = await getCategory(categoryId);
             setCategoryName(category.name);
-        });
+        } catch (error) {
+            console.error(`Category with ID ${categoryId} not found:`, error);
+        }
     };
 
     const loadMoreProducts = () => {
