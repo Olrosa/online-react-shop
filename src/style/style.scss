@@ -7,6 +7,7 @@ body {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
 }
 
 .wrapper {
@@ -18,4 +19,8 @@ body {
 a {
     text-decoration: none;
     color: black;
+}
+
+.section {
+    padding: 50px 0;
 }

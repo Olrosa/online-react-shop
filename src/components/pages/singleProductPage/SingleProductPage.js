@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 
 import usePlatziService from '../../../services/PlatziService';
 
+import Spinner from '../../spinner/Spinner'
+
 import thumbnail from '../../../resources/img/thumbnail.png';
 
 import './singleProductPage.scss';
@@ -29,12 +31,12 @@ const SingleProductPage = () => {
     }
     
 
-    const content = !loading ? <View product={product}/> : <p>Loading..</p>
+    const content = !loading ? <View product={product}/> : <Spinner/>
 
     return (
-        <>
+        <div className='section'>
             {content}
-        </>
+        </div>
     )
 }
 

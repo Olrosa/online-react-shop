@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import ProductsListItem from '../productsListItem/ProductsListItem';
-import SkeletonLoader from '../skeletonLoader/SkeletonLoader';
+import SkeletonLoader from '../skeletonLoader/SkeletonLoaderProducts';
 
 import usePlatziService from '../../services/PlatziService';
 
@@ -67,7 +67,7 @@ const ProductsList = ({ categoryId }) => {
     const items = renderItems(productsList);
 
     return (
-        <div className="products">
+        <section className="products">
             <div className='wrapper'>
                 <h2 className="products__title">{categoryName}</h2>
                 {loading && productsList.length === 0 ? (
@@ -90,8 +90,9 @@ const ProductsList = ({ categoryId }) => {
                     )
                 )}
             </div>
-        </div>
+        </section>
     );
 };
+
 
 export default ProductsList;
