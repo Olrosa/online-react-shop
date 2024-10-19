@@ -3,6 +3,7 @@ import App from "./components/app/App";
 
 import "./style/style.scss";
 import './style/button.scss';
+import './style/form.scss';
 import './style/olrosa-lib.scss';
 
 
