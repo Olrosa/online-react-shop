@@ -5,6 +5,7 @@ import store from '../../store/index';
 import { MainPage, SingleProductPage } from '../pages';
 
 import Header from "../header/Header";
+import Footer from "../footer/Footer";
 
 import './app.scss';
 
@@ -19,6 +20,7 @@ const App = () => {
                         <Route path="/products/:productId" element={<SingleProductPage/>}/>
                     </Routes>
                 </main>
+                <Footer/>
             </Router>
         </Provider>
     )
