@@ -6,9 +6,9 @@ const MainPage = () => {
     return (
         <>
             <div className='section flex-offer-col gap-50'>
-                <Banner/>
-                <ProductsList categoryId={1} />
-                <ProductsList categoryId={2} />
+                <Banner slideNum={0} autoplaySlider={true}/>
+                <ProductsList categoryId={1} limit={5} />
+                <ProductsList categoryId={2} limit={10}/>
             </div>
         </>
     )
