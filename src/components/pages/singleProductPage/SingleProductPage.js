@@ -1,10 +1,13 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import usePlatziService from '../../../services/PlatziService';
 
 import ProductsList from '../../productsList/ProductsList';
-import Spinner from '../../spinner/Spinner'
+import Spinner from '../../spinner/Spinner';
+
+import { productAdded } from '../../../actions';
 
 import thumbnail from '../../../resources/img/thumbnail.png';
 
@@ -17,8 +20,12 @@ const SingleProductPage = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [count, setCount] = useState(0);
     const [categoryId, setCategoryId] = useState();
+    const [buttonState, setButtonState] = useState({ text: 'To cart', color: '' });
 
     const {getProduct, getProductsByCategory} = usePlatziService();
+
+    const dispatch = useDispatch();
+    const {cart} = useSelector(state => state);
 
     useEffect(() => {
         onRequest();
@@ -42,6 +49,32 @@ const SingleProductPage = () => {
     const changeCount = useCallback((operator) => {
         setCount(prevCount => operator === 'plus' ? prevCount + 1 : (prevCount > 0 ? prevCount - 1 : prevCount));
     }, [count])
+
+    const onAddButton = useCallback((product, count) => {
+        if (count > 0) {
+            const { title, images, price, id } = product;
+            const imageUrl = images[0] ? images[0].replace(/[\[\]"]/g, '') : thumbnail;
+    
+            const newProduct = {
+                title,
+                image: imageUrl,
+                id,
+                quantity: count,
+                totalPrice: price 
+            };
+    
+            dispatch(productAdded(newProduct));
+            setButtonState({ text: 'Added', color: '#33B241' });
+            setCount(0);
+            setTimeout(() => {
+                setButtonState({ text: 'To cart', color: '' });
+            }, 2000);
+        }
+    }, []);
+
+    const checkState = () => {
+        console.log(cart);
+    }
     
 
     const content = !loading ? <View 
@@ -50,7 +83,11 @@ const SingleProductPage = () => {
                                 changeSlide={changeSlide}
                                 count={count}
                                 changeCount={changeCount}
-                                categoryId={categoryId}/> 
+                                categoryId={categoryId}
+                                onAddButton={onAddButton}
+                                checkState={checkState}
+                                buttonState={buttonState}
+                                /> 
                                 : <section className='section'><Spinner/></section>
 
     return (
@@ -60,7 +97,7 @@ const SingleProductPage = () => {
     )
 }
 
-const View = ({product, currentSlide, changeSlide, count, changeCount, categoryId}) => {
+const View = ({product, currentSlide, changeSlide, count, changeCount, categoryId, onAddButton, checkState, buttonState}) => {
     const {title, price, description, images} = product;
     const imageUrls = (images && images.length > 0) ? images.map(item => item.replace(/[\[\]"]/g, '')) : [thumbnail];
 
@@ -72,6 +109,7 @@ const View = ({product, currentSlide, changeSlide, count, changeCount, categoryI
         <>
             <section className='section product'>
                 <div className='wrapper'>
+                    {/* <button onClick={checkState} className='button'>Check state</button> */}
                     <div className='product__offer'>
                         <div className='product__block'>
                             <div className='product__image'>
@@ -102,8 +140,12 @@ const View = ({product, currentSlide, changeSlide, count, changeCount, categoryI
                                         <span onClick={() => changeCount('plus')} className='product__symbol'>+</span>
                                     </div>
                                 </div>
-                                <button className='button product__button'>
-                                    To cart
+                                <button 
+                                    onClick={() => onAddButton(product, count)} 
+                                    className='button product__button' 
+                                    style={{ backgroundColor: buttonState.color }}
+                                >
+                                    {buttonState.text}
                                 </button>
                             </div>
                         </div>

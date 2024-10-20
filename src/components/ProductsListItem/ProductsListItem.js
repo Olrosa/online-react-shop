@@ -1,15 +1,39 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
+import { productAdded } from '../../actions';
 
 import './ProductsListItem.scss';
 import thumbnail from '../../resources/img/thumbnail.png';
 
 const ProductsListItem = (props) => {
+    const [buttonState, setButtonState] = useState({ text: 'To cart', color: '' });
+    
+    const dispatch = useDispatch();
 
     let {title, price, images, id} = props;
 
     price = price || 0;
     title = title || 'Name of product';
     images = (images && images.length > 0) ? images[0].replace(/[\[\]"]/g, '') : thumbnail;
+
+    const onAddButton = () => {
+        const newProduct = {
+            title,
+            image: images,
+            id,
+            quantity: 1, 
+            totalPrice: price 
+        };
+
+        dispatch(productAdded(newProduct));
+        setButtonState({ text: 'Added', color: '#33B241' });
+        setTimeout(() => {
+            setButtonState({ text: 'To cart', color: '' });
+        }, 2000);
+        
+    };
 
     return (
         <div className='card flex-offer-col gap-20'>
@@ -24,7 +48,13 @@ const ProductsListItem = (props) => {
                     <span className='card__title'>{title}</span>
                 </div>
             </Link>
-            <button className='button'>To cart</button>
+            <button 
+                onClick={onAddButton} 
+                className='button' 
+                style={{ backgroundColor: buttonState.color }}
+            >
+                {buttonState.text}
+            </button>
         </div>
     )
 } 
