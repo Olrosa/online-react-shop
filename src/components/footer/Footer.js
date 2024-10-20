@@ -38,7 +38,7 @@ const Footer = () => {
 const View = ({categories}) => {
 
     return (
-<footer className="footer">
+        <footer className="footer">
             <div className="wrapper">
                 <div className="footer__offer">
                     <div className="footer__item">
