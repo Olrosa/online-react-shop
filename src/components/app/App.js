@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from '../../store/index';
 
-import { MainPage, SingleProductPage } from '../pages';
+import { MainPage, SingleProductPage, SingleCategoryPage } from '../pages';
 
 import Header from "../header/Header";
 import Footer from "../footer/Footer";
@@ -18,6 +18,7 @@ const App = () => {
                     <Routes>
                         <Route path="/" element={<MainPage/>}/>
                         <Route path="/products/:productId" element={<SingleProductPage/>}/>
+                        <Route path="/categories/:categoryId" element={<SingleCategoryPage/>}/>
                     </Routes>
                 </main>
                 <Footer/>
