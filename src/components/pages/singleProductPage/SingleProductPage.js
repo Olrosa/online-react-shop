@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 
 import usePlatziService from '../../../services/PlatziService';
 
+import ProductsList from '../../productsList/ProductsList';
 import Spinner from '../../spinner/Spinner'
 
 import thumbnail from '../../../resources/img/thumbnail.png';
@@ -15,20 +16,22 @@ const SingleProductPage = () => {
     const [loading, setLoading] = useState(true);
     const [currentSlide, setCurrentSlide] = useState(0);
     const [count, setCount] = useState(0);
+    const [categoryId, setCategoryId] = useState();
 
-    const {getProduct} = usePlatziService();
+    const {getProduct, getProductsByCategory} = usePlatziService();
 
     useEffect(() => {
-        updateProduct();
+        onRequest();
     }, [productId])
 
-    const updateProduct = () => {
+    const onRequest = () => {
         getProduct(productId)
-            .then(onProductLoaded)
+            .then(onProductLoaded);
     }
 
     const onProductLoaded = (product) => {
         setProduct(product);
+        setCategoryId(product.category.id)
         setLoading(false);
     }
 
@@ -46,7 +49,8 @@ const SingleProductPage = () => {
                                 currentSlide={currentSlide} 
                                 changeSlide={changeSlide}
                                 count={count}
-                                changeCount={changeCount}/> 
+                                changeCount={changeCount}
+                                categoryId={categoryId}/> 
                                 : <section className='section'><Spinner/></section>
 
     return (
@@ -56,7 +60,7 @@ const SingleProductPage = () => {
     )
 }
 
-const View = ({product, currentSlide, changeSlide, count, changeCount}) => {
+const View = ({product, currentSlide, changeSlide, count, changeCount, categoryId}) => {
     const {title, price, description, images} = product;
     const imageUrls = (images && images.length > 0) ? images.map(item => item.replace(/[\[\]"]/g, '')) : [thumbnail];
 
@@ -65,46 +69,51 @@ const View = ({product, currentSlide, changeSlide, count, changeCount}) => {
     }
 
     return (
-        <section className='section product'>
-            <div className='wrapper'>
-                <div className='product__offer'>
-                    <div className='product__block'>
-                        <div className='product__image'>
-                            <img src={imageUrls[currentSlide]} className='product__image-main'/>
-                            <div className='product__images'>
-                               { renderImages(imageUrls) }
-                            </div>
-                        </div>
-                    </div>
-                    <div className='product__block'>
-                        <div className='product__about'>
-                            <div className='flex-offer jus-con-sb'>
-                                <h1 className='product__title'>
-                                    {title}
-                                </h1>
-                                <span className='product__price'>
-                                    {price} $
-                                </span>
-                            </div>
-                            <p className='product__descr'>
-                                {description}
-                            </p>
-                            <div className='flex-offer gap-20 al-it-cen'>
-                                <p className='product__descr'>Quantity: </p>
-                                <div className='flex-offer gap-10 al-it-cen no-wrap'>
-                                    <span onClick={() => changeCount('minus')} className='product__symbol'>-</span>
-                                    <span className='product__number'>{count}</span>
-                                    <span onClick={() => changeCount('plus')} className='product__symbol'>+</span>
+        <>
+            <section className='section product'>
+                <div className='wrapper'>
+                    <div className='product__offer'>
+                        <div className='product__block'>
+                            <div className='product__image'>
+                                <img src={imageUrls[currentSlide]} className='product__image-main'/>
+                                <div className='product__images'>
+                                { renderImages(imageUrls) }
                                 </div>
                             </div>
-                            <button className='button product__button'>
-                                To cart
-                            </button>
+                        </div>
+                        <div className='product__block'>
+                            <div className='product__about'>
+                                <div className='flex-offer jus-con-sb'>
+                                    <h1 className='product__title'>
+                                        {title}
+                                    </h1>
+                                    <span className='product__price'>
+                                        {price} $
+                                    </span>
+                                </div>
+                                <p className='product__descr'>
+                                    {description}
+                                </p>
+                                <div className='flex-offer gap-20 al-it-cen'>
+                                    <p className='product__descr'>Quantity: </p>
+                                    <div className='flex-offer gap-10 al-it-cen no-wrap'>
+                                        <span onClick={() => changeCount('minus')} className='product__symbol'>-</span>
+                                        <span className='product__number'>{count}</span>
+                                        <span onClick={() => changeCount('plus')} className='product__symbol'>+</span>
+                                    </div>
+                                </div>
+                                <button className='button product__button'>
+                                    To cart
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+            <section className='section'>
+                {<ProductsList categoryId={categoryId} limit={5} random={true}/>}
+            </section>
+        </>
     )
 }
 

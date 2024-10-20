@@ -8,7 +8,7 @@ import usePlatziService from '../../services/PlatziService';
 
 import './ProductsList.scss';
 
-const ProductsList = ({ categoryId, limit }) => {
+const ProductsList = ({ categoryId, limit, random = false }) => {
     const { getProductsByCategory, getCategory, getProduct } = usePlatziService();
     const dispatch = useDispatch();
 
@@ -55,11 +55,12 @@ const ProductsList = ({ categoryId, limit }) => {
         onRequest(true);
     };
 
-    function renderItems(arr) {
-        const items = arr.map((item) => {
+    function renderItems(arr, random) {
+        const itemsArray = random ? [...arr].sort(() => Math.random() - 0.5) : arr;
+        const items = itemsArray.map((item) => {
             return <ProductsListItem {...item} key={item.id} />;
         });
-
+    
         return <div className="products__offer">{items}</div>;
     }
 
