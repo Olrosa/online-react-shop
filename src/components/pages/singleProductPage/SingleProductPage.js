@@ -127,7 +127,7 @@ const View = ({product, currentSlide, changeSlide, count, changeCount, categoryI
                                     </h1>
                                     <span className='product__price'>
                                         {price} $
-                                    </span>
+                                    </span> 
                                 </div>
                                 <p className='product__descr'>
                                     {description}
