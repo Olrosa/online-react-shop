@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import ProductsListItem from '../productsListItem/ProductsListItem';
+import ProductsListItem from '../ProductsListItem/ProductsListItem';
 import SkeletonLoader from '../skeletonLoader/SkeletonLoaderProducts';
 
 import usePlatziService from '../../services/PlatziService';
