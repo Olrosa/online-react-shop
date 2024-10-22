@@ -1,5 +1,7 @@
 const initialState = {
-    cart: []
+    cart: [],
+    user: 'Olrosa',
+    role: 'user'
 };
 
 const reducer = (state = initialState, action) => {
@@ -25,10 +27,34 @@ const reducer = (state = initialState, action) => {
                     ...state,
                     cart: [
                         ...state.cart,
-                        action.payload
+                        action.payload,
                     ]
                 };
             }
+        case 'QUANTITY_PRODUCT_UPDATED':
+            const productIndex = state.cart.findIndex(
+                item => item.id === action.payload.id
+            );
+
+            if (productIndex !== -1) {
+                const updatedCart = [...state.cart];
+                updatedCart[productIndex] = {
+                    ...updatedCart[productIndex],
+                    quantity: action.payload.count // Обновляем quantity
+                };
+                return {
+                    ...state,
+                    cart: updatedCart
+                };
+            }
+            return state
+        case 'CART_ITEM_REMOVED':
+            const filteredCart = state.cart.filter(item => item.id !== action.payload);
+            return {
+                ...state,
+                cart: filteredCart
+            };
+
         default:
             return state;
     }

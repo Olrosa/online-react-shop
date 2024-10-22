@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { productAdded } from '../../actions';
 
@@ -11,6 +11,7 @@ const ProductsListItem = (props) => {
     const [buttonState, setButtonState] = useState({ text: 'To cart', color: '' });
     
     const dispatch = useDispatch();
+    const {user} = useSelector(state => state);
 
     let {title, price, images, id} = props;
 
@@ -24,7 +25,8 @@ const ProductsListItem = (props) => {
             image: images,
             id,
             quantity: 1, 
-            totalPrice: price 
+            price: price,
+            user: user
         };
 
         dispatch(productAdded(newProduct));

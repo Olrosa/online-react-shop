@@ -25,7 +25,7 @@ const SingleProductPage = () => {
     const {getProduct, getProductsByCategory} = usePlatziService();
 
     const dispatch = useDispatch();
-    const {cart} = useSelector(state => state);
+    const {cart, user} = useSelector(state => state);
 
     useEffect(() => {
         onRequest();
@@ -60,7 +60,8 @@ const SingleProductPage = () => {
                 image: imageUrl,
                 id,
                 quantity: count,
-                totalPrice: price 
+                price: price,
+                user: user
             };
     
             dispatch(productAdded(newProduct));
@@ -109,7 +110,7 @@ const View = ({product, currentSlide, changeSlide, count, changeCount, categoryI
         <>
             <section className='section product'>
                 <div className='wrapper'>
-                    {/* <button onClick={checkState} className='button'>Check state</button> */}
+                    <button onClick={checkState} className='button'>Check state</button>
                     <div className='product__offer'>
                         <div className='product__block'>
                             <div className='product__image'>

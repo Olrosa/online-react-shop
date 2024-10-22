@@ -1,0 +1,43 @@
+.cart {
+    &__offer {
+        margin-top: 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    &__item {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding: 20px;
+        background-color: #F4F5F7;
+        border-radius: 10px;
+       
+    }
+    &__img {
+        width: 180px;
+        height: 130px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+    &__name {
+        font-size: 18px;
+        font-weight: 600;
+    }
+    &__price {
+        font-size: 22px;
+        line-height: 26px;
+        font-weight: 600;
+        color: #f44;
+    }
+    &__empty {
+        font-size: 18px;
+        font-weight: 600;
+    }
+    &__cost {
+        font-size: 22px;
+        line-height: 26px;
+        font-weight: 600;
+        color: #f44;
+    }
+}
