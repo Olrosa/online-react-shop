@@ -25,7 +25,7 @@ const SingleProductPage = () => {
     const {getProduct, getProductsByCategory} = usePlatziService();
 
     const dispatch = useDispatch();
-    const {cart, user} = useSelector(state => state);
+    const user = useSelector(state => state.user);
 
     useEffect(() => {
         onRequest();
@@ -72,10 +72,6 @@ const SingleProductPage = () => {
             }, 2000);
         }
     }, []);
-
-    const checkState = () => {
-        console.log(cart);
-    }
     
 
     const content = !loading ? <View 
@@ -86,7 +82,6 @@ const SingleProductPage = () => {
                                 changeCount={changeCount}
                                 categoryId={categoryId}
                                 onAddButton={onAddButton}
-                                checkState={checkState}
                                 buttonState={buttonState}
                                 /> 
                                 : <section className='section'><Spinner/></section>
@@ -98,7 +93,7 @@ const SingleProductPage = () => {
     )
 }
 
-const View = ({product, currentSlide, changeSlide, count, changeCount, categoryId, onAddButton, checkState, buttonState}) => {
+const View = ({product, currentSlide, changeSlide, count, changeCount, categoryId, onAddButton, buttonState}) => {
     const {title, price, description, images} = product;
     const imageUrls = (images && images.length > 0) ? images.map(item => item.replace(/[\[\]"]/g, '')) : [thumbnail];
 
@@ -110,7 +105,7 @@ const View = ({product, currentSlide, changeSlide, count, changeCount, categoryI
         <>
             <section className='section product'>
                 <div className='wrapper'>
-                    <button onClick={checkState} className='button'>Check state</button>
+                    
                     <div className='product__offer'>
                         <div className='product__block'>
                             <div className='product__image'>
