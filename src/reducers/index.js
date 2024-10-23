@@ -1,12 +1,31 @@
 const initialState = {
     cart: [],
-    user: 'none',
+    user: null,
     role: 'user',
-    authorization: false
+    authorization: false,
+    token: null
 };
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case 'INIT_APP':
+            if (action.payload === false) {
+                return {
+                    ...state,
+                    token: null,
+                    authorization: false,
+                    user: null,
+                    role: 'user'
+                };
+            }
+            return {
+                ...state,
+                token: action.payload.token || null, // Устанавливаем токен из payload
+                authorization: !!action.payload.token, // Устанавливаем авторизацию на основе наличия токена
+                user: action.payload, // action.payload теперь содержит все данные пользователя
+                role: action.payload.role || 'user' // Устанавливаем роль
+            };
+
         case 'PRODUCT_ADDED':
             const existingProductIndex = state.cart.findIndex(item => item.id === action.payload.id);
 
@@ -55,7 +74,22 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 cart: filteredCart
             };
-
+        case 'LOGIN_SUCCESS':
+            return {
+                ...state,
+                user: action.payload.user,
+                token: action.payload.token,
+                authorization: true,
+                role: action.payload.role
+            };
+        case 'LOGOUT':
+            return {
+                ...state,
+                user: null,
+                token: null,
+                authorization: false,
+                role: 'user'
+            };
         default:
             return state;
     }

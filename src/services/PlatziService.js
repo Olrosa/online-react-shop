@@ -43,6 +43,21 @@ const usePlatziService = () => {
         return res;
     }
 
+    const login = async (email, password) => {
+        const body = JSON.stringify({ email, password });
+        const res = await request(`${_apiBase}auth/login`, 'POST', body);
+        return res;
+    };
+
+    const getUserProfile = async (token) => {
+        const res = await request(`${_apiBase}auth/profile`, 'GET', null, {
+            'Authorization': `Bearer ${token}`
+        });
+        return res;
+    };
+    
+    
+
     return {
         getAllProducts: () => getAllItems('products'),
         getProduct: (id) => getItem('products', id),
@@ -61,7 +76,9 @@ const usePlatziService = () => {
         deleteUser: (id) => deleteItem('users', id),
         checkEmail: (email) => createItem('users/is-available', { email }),
         getProductsByCategory,
-        filterProducts
+        filterProducts,
+        login,
+        getUserProfile
     };
 }
 
