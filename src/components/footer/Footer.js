@@ -26,7 +26,7 @@ const Footer = () => {
             })
     }, [])
 
-    const content = !loading ? <View categories={categories}/> : (<div class="section wrapper"><Spinner/></div>)
+    const content = !loading ? <View categories={categories}/> : (<div className="section wrapper"><Spinner/></div>)
 
     return (
         <>

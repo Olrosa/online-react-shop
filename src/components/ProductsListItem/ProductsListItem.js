@@ -11,7 +11,7 @@ const ProductsListItem = (props) => {
     const [buttonState, setButtonState] = useState({ text: 'To cart', color: '' });
     
     const dispatch = useDispatch();
-    const {user} = useSelector(state => state);
+    const user = useSelector(state => state.user);
 
     let {title, price, images, id} = props;
 
