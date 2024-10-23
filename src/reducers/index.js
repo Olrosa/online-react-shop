@@ -1,7 +1,8 @@
 const initialState = {
     cart: [],
-    user: 'Olrosa',
-    role: 'user'
+    user: 'none',
+    role: 'user',
+    authorization: false
 };
 
 const reducer = (state = initialState, action) => {

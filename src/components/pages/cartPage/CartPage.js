@@ -12,7 +12,7 @@ const CartPage = () => {
 
     const renderItems = (arr) => {
         return arr.map((item, i) => {
-            return <CartItem ket={i} item={item}/>
+            return <CartItem key={i} item={item}/>
         })
     }
 
@@ -20,6 +20,10 @@ const CartPage = () => {
         return cart.reduce((total, item) => {
             return total + item.price * item.quantity;
         }, 0);
+    }
+
+    const checkState = () => {
+        console.log(cart);
     }
 
     const content = (cart.length > 0)  ? renderItems(cart) : <p className='cart__empty'>Cart is empty :(</p>
@@ -40,6 +44,9 @@ const CartPage = () => {
                     <h1>
                         Cart
                     </h1>    
+                    <button onClick={checkState} className='button button-order'>
+                        Check state
+                    </button>
                     <div className='cart__offer'>
                         {content}
                         {finishOrder}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -13,9 +13,15 @@ const CartItem = ({item}) => {
     
     const totalPrice = price * quantity;
 
-    const onUpdateQuantity = (operator) => {
-        setCount(prevCount => operator === 'plus' ? prevCount + 1 : (prevCount > 1 ? prevCount - 1 : prevCount));
+    useEffect(() => {
         dispatch(quantityProductUpdated(count, id));
+    }, [count]);
+
+    const onUpdateQuantity = (operator) => {
+        setCount(prevCount => {
+            const newCount = operator === 'plus' ? prevCount + 1 : (prevCount > 1 ? prevCount - 1 : prevCount);
+            return newCount;
+        });
     }
 
     const onRemoveItem = () => {
