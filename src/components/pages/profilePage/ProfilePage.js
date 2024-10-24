@@ -7,7 +7,7 @@ import {logout} from '../../../actions'
 import './profilePage.scss';
 
 const ProfilePage = () => {
-    const {role} = useSelector(state => state);
+    const {role, user} = useSelector(state => state);
     const navigate = useNavigate();
     const dispatch = useDispatch()
 
@@ -24,7 +24,7 @@ const ProfilePage = () => {
             <div className='wrapper'>
                 <div className='profile__offer flex-offer-col gap-20'>
                     <div className='flex-offer jus-con-sb'>
-                        <h1>User page</h1>
+                        <h1>Welcome - {user.name}</h1>
                         <button onClick={() => dispatch(logout())} className='button button-order'>Logout</button>
                     </div>
                     {adminPage}

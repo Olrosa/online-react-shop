@@ -1,4 +1,4 @@
-import { login, getUserProfile } from '../services/PlatziServiceWithoutHook';
+import { login, getUserProfile, createUser } from '../services/PlatziServiceWithoutHook';
 
 export const productAddedToCart = (product) => ({
     type: 'PRODUCT_ADDED_TO_CART',
@@ -34,17 +34,33 @@ export const setCart = (cart) => ({
 
 export const loginUser = (email, password) => {
     return async (dispatch) => {
+        const cart = JSON.parse(localStorage.getItem('cart'));
         try {
             const res = await login(email, password);
             if (res.access_token) {
-                console.log('Успех')
+                console.log('Авторизация')
                 localStorage.setItem('token', res.access_token);
                 const userProfile = await getUserProfile(res.access_token);
                 console.log('User profile:', userProfile);
-                dispatch(initApp({ ...userProfile, token: res.access_token }));
+                dispatch(initApp({ ...userProfile, token: res.access_token, cart}));
             }
         } catch (error) {
             console.error('Ошибка при авторизации:', error);
+        }
+    };
+};
+
+export const registrationUser = (name, email, password, avatar) => {
+    return async (dispatch) => {
+        try {
+            const res = await createUser(name, email, password, avatar);
+            console.log(res);
+            if (res.id) {
+                console.log('Регистрация')
+                dispatch(loginUser(email, password))    
+            }
+        } catch (error) {
+            console.error('Ошибка при регистрации:', error);
         }
     };
 };
@@ -57,7 +73,7 @@ export const initializeSession = () => {
             try {
                 const res = await getUserProfile(token);
                 if (res) {
-                    dispatch(initApp({ ...res, token }));
+                    dispatch(initApp({ ...res, token, cart }));
                 } else {
                     dispatch(initApp(false));
                 }

@@ -55,7 +55,7 @@ const LoginPage = () => {
                                         Sign in
                                     </button>
                                     <p className='form-text'>
-                                        Sign in or <Link to="/login">sign up</Link>.
+                                        Sign in or <Link to="/signup">sign up</Link>.
                                     </p>
                                 </div>
                             </div>

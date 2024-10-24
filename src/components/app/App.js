@@ -8,7 +8,7 @@ import ProtectedRoute from "../protectedRoute/ProtectedRoute";
 
 import usePlatziService from "../../services/PlatziService";
 
-import { MainPage, SingleProductPage, SingleCategoryPage, CartPage, LoginPage, AdminPage, ProfilePage } from '../pages';
+import { MainPage, SingleProductPage, SingleCategoryPage, CartPage, LoginPage, AdminPage, ProfilePage, SignUpPage } from '../pages';
 
 import Header from "../header/Header";
 import Footer from "../footer/Footer";
@@ -22,8 +22,6 @@ const App = () => {
     const user = {};
 
     useEffect(() => {
-        getAllUsers()
-            .then(res => console.log(res))
         dispatch(initializeSession());
     }, [dispatch]);
     
@@ -50,6 +48,12 @@ const App = () => {
                     <Route path="/profile" element={
                         <ProtectedRoute roles={['customer', 'admin']}>
                             <ProfilePage/>
+                        </ProtectedRoute>
+                    }/>
+
+                    <Route path="/signup" element={
+                        <ProtectedRoute roles={['user']}>
+                            <SignUpPage/>
                         </ProtectedRoute>
                     }/>
                 </Routes>

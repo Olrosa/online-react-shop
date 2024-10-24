@@ -31,3 +31,12 @@ export const getUserProfile = async (token) => {
     });
     return res;
 };
+
+
+export const createUser = async (name, email, password, avatar) => {
+    const body = JSON.stringify({name, email, password, avatar});
+    const res = await requestWithoutHook(`${_apiBase}users/`, 'POST', body, {
+        'Content-Type': 'application/json'
+    });
+    return res;
+}

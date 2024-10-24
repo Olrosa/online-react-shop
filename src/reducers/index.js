@@ -26,7 +26,7 @@ const reducer = (state = initialState, action) => {
                 authorization: !!action.payload.token, 
                 user: action.payload,
                 role: action.payload.role || 'user',
-                cart: [],
+                cart: action.payload.cart || [],
                 isLoading: false // Завершаем загрузку
             };
         case 'SET_CART':
@@ -94,6 +94,7 @@ const reducer = (state = initialState, action) => {
                 role: action.payload.role
             };
         case 'LOGOUT':
+            localStorage.clear()
             return {
                 ...state,
                 user: null,
