@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import {login, initApp} from '../../../actions'
+import {initApp} from '../../../actions'
 
 import usePlatziService from '../../../services/PlatziService';
 
 import './loginPage.scss';
 
 const LoginPage = () => {
-    const {login, getUser, getUserProfile} = usePlatziService();
+    const {login, getUserProfile} = usePlatziService();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();

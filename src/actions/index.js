@@ -16,11 +16,6 @@ export const cartItemRemoved = (id) => ({
     payload: id
 });
 
-export const loginSuccess = (user, token, role) => ({
-    type: 'LOGIN_SUCCESS',
-    payload: { user, token, role }
-});
-
 export const logout = () => ({
     type: 'LOGOUT'
 });

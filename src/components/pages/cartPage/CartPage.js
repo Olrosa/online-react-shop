@@ -22,10 +22,6 @@ const CartPage = () => {
         }, 0);
     }
 
-    const checkState = () => {
-        console.log(cart);
-    }
-
     const content = (cart.length > 0)  ? renderItems(cart) : <p className='cart__empty'>Cart is empty :(</p>
 
     const finishOrder =  (cart.length > 0) ? (
@@ -44,9 +40,6 @@ const CartPage = () => {
                     <h1>
                         Cart
                     </h1>    
-                    <button onClick={checkState} className='button button-order'>
-                        Check state
-                    </button>
                     <div className='cart__offer'>
                         {content}
                         {finishOrder}

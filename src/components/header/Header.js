@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import logo from '../../resources/icons/logo.png';
 import './header.scss';
 
+
 const Header = () => {
+    const state = useSelector(state => state)
+
     return (
         <div className="header">
             <div className="wrapper">
@@ -11,6 +15,12 @@ const Header = () => {
                     <Link to="/">
                         <img src={logo} className="header__logo" />
                     </Link>
+                    <button className='button' onClick={() =>  console.log(state)}>
+                        Check state
+                    </button>
+                    <button className='button' onClick={() => localStorage.clear()}>
+                        clear storage
+                    </button>
                     <form className="form">
                         <div className="form-input-container">
                             <input className="form-input form-input-search"/>
