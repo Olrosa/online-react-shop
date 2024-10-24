@@ -3,20 +3,21 @@ const initialState = {
     user: null,
     role: 'user',
     authorization: false,
-    token: null
+    token: null,
+    isLoading: true
 };
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case 'INIT_APP':
-            console.log('INIT_APP action received:', action.payload);
             if (action.payload === false) {
                 return {
                     ...state,
                     token: null,
                     authorization: false,
                     user: null,
-                    role: 'user'
+                    role: 'user',
+                    isLoading: false // Завершаем загрузку
                 };
             }
             return {
@@ -25,7 +26,8 @@ const reducer = (state = initialState, action) => {
                 authorization: !!action.payload.token, 
                 user: action.payload,
                 role: action.payload.role || 'user',
-                cart: []
+                cart: [],
+                isLoading: false // Завершаем загрузку
             };
         case 'SET_CART':
             return {
@@ -97,7 +99,8 @@ const reducer = (state = initialState, action) => {
                 user: null,
                 token: null,
                 authorization: false,
-                role: 'user'
+                role: 'user',
+                isLoading: false
             };
         default:
             return state;

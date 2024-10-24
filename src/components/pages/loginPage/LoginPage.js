@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 
 import {loginUser} from '../../../actions'
 
@@ -10,6 +10,15 @@ const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const isAuthorized = useSelector(state => state.authorization);
+
+    useEffect(() => {
+        if (isAuthorized) {
+            navigate('/profile');
+        }
+    }, [isAuthorized, navigate]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -27,7 +36,7 @@ const LoginPage = () => {
                 <div className='wrapper'>
                     <div className='login__offer'>
                         <form className='form' onSubmit={handleLogin}>
-                            <h1>Sing in</h1>  
+                            <h1>Sign in</h1>  
                             <div className='login__fields'>
                                 <div className='form-input-offer'>
                                     <label htmlFor="email" className='form-label'>

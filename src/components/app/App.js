@@ -4,9 +4,9 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import {initializeSession } from '../../actions'
 
-import usePlatziService from "../../services/PlatziService";
+import ProtectedRoute from "../protectedRoute/ProtectedRoute";
 
-import { MainPage, SingleProductPage, SingleCategoryPage, CartPage, LoginPage } from '../pages';
+import { MainPage, SingleProductPage, SingleCategoryPage, CartPage, LoginPage, AdminPage, UserPage } from '../pages';
 
 import Header from "../header/Header";
 import Footer from "../footer/Footer";
@@ -14,8 +14,6 @@ import Footer from "../footer/Footer";
 import './app.scss';
 
 const App = () => {
-    const {getUser, login} = usePlatziService(); 
-
     const dispatch = useDispatch();
     const user = {};
 
@@ -34,6 +32,20 @@ const App = () => {
                     <Route path="/categories/:categoryId" element={<SingleCategoryPage/>}/>
                     <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/cart" element={<CartPage/>}/>
+
+                    {/* PROTECTED */}
+
+                    <Route path="/admin" element={
+                        <ProtectedRoute roles={['admin']}>
+                            <AdminPage/>
+                        </ProtectedRoute>
+                    }/>
+
+                    <Route path="/profile" element={
+                        <ProtectedRoute roles={['customer', 'admin']}>
+                            <UserPage/>
+                        </ProtectedRoute>
+                    }/>
                 </Routes>
             </main>
             <Footer/>

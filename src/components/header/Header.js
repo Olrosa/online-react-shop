@@ -11,13 +11,10 @@ const Header = () => {
     return (
         <div className="header">
             <div className="wrapper">
-                <div className="header__offer">
+                <div className="header__offer gap-20">
                     <Link to="/">
                         <img src={logo} className="header__logo" />
                     </Link>
-                    <button className='button' onClick={() =>  console.log(state)}>
-                        Check state
-                    </button>
                     <button className='button' onClick={() => localStorage.clear()}>
                         clear storage
                     </button>
