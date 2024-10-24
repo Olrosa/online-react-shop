@@ -9,6 +9,7 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case 'INIT_APP':
+            console.log('INIT_APP action received:', action.payload);
             if (action.payload === false) {
                 return {
                     ...state,
@@ -23,34 +24,42 @@ const reducer = (state = initialState, action) => {
                 token: action.payload.token || null, 
                 authorization: !!action.payload.token, 
                 user: action.payload,
-                role: action.payload.role || 'user'
+                role: action.payload.role || 'user',
+                cart: []
             };
-
-        case 'PRODUCT_ADDED':
+        case 'SET_CART':
+            return {
+                ...state,
+                cart: action.payload
+            }
+        case 'PRODUCT_ADDED_TO_CART':
             const existingProductIndex = state.cart.findIndex(item => item.id === action.payload.id);
-
+        
+            let updatedCart;
             if (existingProductIndex !== -1) {
                 // Обновляем количество для существующего товара
-                const updatedCart = [...state.cart];
+                updatedCart = [...state.cart];
                 updatedCart[existingProductIndex] = {
                     ...updatedCart[existingProductIndex],
                     quantity: updatedCart[existingProductIndex].quantity + action.payload.quantity, // Обновляем quantity
                     totalPrice: updatedCart[existingProductIndex].totalPrice + action.payload.totalPrice // Обновляем totalPrice
                 };
-                return {
-                    ...state,
-                    cart: updatedCart
-                };
             } else {
                 // Добавляем новый товар с полем quantity
-                return {
-                    ...state,
-                    cart: [
-                        ...state.cart,
-                        action.payload,
-                    ]
-                };
+                updatedCart = [
+                    ...state.cart,
+                    action.payload,
+                ];
             }
+        
+            // Сохраняем обновленную корзину в localStorage
+            localStorage.setItem('cart', JSON.stringify(updatedCart));
+        
+            return {
+                ...state,
+                cart: updatedCart
+            };
+            
         case 'QUANTITY_PRODUCT_UPDATED':
             const productIndex = state.cart.findIndex(
                 item => item.id === action.payload.id

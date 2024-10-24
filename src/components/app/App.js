@@ -14,7 +14,7 @@ import Footer from "../footer/Footer";
 import './app.scss';
 
 const App = () => {
-    const {getUserProfile} = usePlatziService(); 
+    const {getUser, login} = usePlatziService(); 
 
     const dispatch = useDispatch();
     const user = {};

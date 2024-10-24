@@ -7,7 +7,7 @@ import usePlatziService from '../../../services/PlatziService';
 import ProductsList from '../../productsList/ProductsList';
 import Spinner from '../../spinner/Spinner';
 
-import { productAdded } from '../../../actions';
+import { productAddedToCart } from '../../../actions';
 
 import thumbnail from '../../../resources/img/thumbnail.png';
 
@@ -64,7 +64,7 @@ const SingleProductPage = () => {
                 user: user
             };
     
-            dispatch(productAdded(newProduct));
+            dispatch(productAddedToCart(newProduct));
             setButtonState({ text: 'Added', color: '#33B241' });
             setCount(0);
             setTimeout(() => {

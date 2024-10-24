@@ -4,18 +4,19 @@ import { Link } from 'react-router-dom';
 
 import {loginUser} from '../../../actions'
 
-import usePlatziService from '../../../services/PlatziService';
-
 import './loginPage.scss';
 
 const LoginPage = () => {
-    const {login, getUserProfile} = usePlatziService();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        if (!email || !password) {
+            console.error("Email и пароль должны быть заполнены");
+            return;
+        }
         dispatch(loginUser(email, password));
     };
     
