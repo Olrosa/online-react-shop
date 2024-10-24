@@ -4,6 +4,6 @@ import SingleCategoryPage from "./singleCategoryPage/SingleCategoryPage";
 import CartPage from "./cartPage/CartPage";
 import LoginPage from "./loginPage/LoginPage";
 import AdminPage from "./adminPage/AdminPage";
-import UserPage from "./userPage/UserPage";
+import ProfilePage from "./profilePage/ProfilePage";
 
-export {MainPage, SingleProductPage, SingleCategoryPage, CartPage, LoginPage, AdminPage, UserPage};
+export {MainPage, SingleProductPage, SingleCategoryPage, CartPage, LoginPage, AdminPage, ProfilePage};
