@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import {initApp} from '../../actions'
+import {initializeSession } from '../../actions'
 
 import usePlatziService from "../../services/PlatziService";
 
@@ -20,26 +20,8 @@ const App = () => {
     const user = {};
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-    
-        if (token) {
-            getUserProfile(token)
-                .then(res => {
-                    if (res) { // Если ответ успешный
-                        // Устанавливаем данные пользователя и токен в Redux
-                        dispatch(initApp({ ...res, token })); // Теперь передаем и токен, и данные пользователя
-                    } else {
-                        dispatch(initApp(false)); // Токен недействителен
-                    }
-                })
-                .catch(err => {
-                    console.error(err); // Логируем ошибку для отладки
-                    dispatch(initApp(false)); // Ошибка при проверке токена
-                });
-        } else {
-            dispatch(initApp(false)); // Токен отсутствует
-        }
-    }, [dispatch, getUserProfile]);
+        dispatch(initializeSession());
+    }, [dispatch]);
     
 
     return (

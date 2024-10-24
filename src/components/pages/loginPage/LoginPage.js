@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import {initApp} from '../../../actions'
+import {loginUser} from '../../../actions'
 
 import usePlatziService from '../../../services/PlatziService';
 
@@ -16,22 +16,7 @@ const LoginPage = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        try {
-            const res = await login(email, password);
-            console.log(res);
-            if (res.access_token) {
-                console.log(res.access_token);
-                // Сохраняем токен в localStorage
-                localStorage.setItem('token', res.access_token);
-                
-                const userProfile = await getUserProfile(res.access_token);
-                // Устанавливаем токен и данные пользователя в Redux через initApp
-                dispatch(initApp({ ...userProfile, token: res.access_token })); 
-                console.log('Авторизация успешна');
-            }
-        } catch (error) {
-            console.error('Ошибка при авторизации:', error);
-        }
+        dispatch(loginUser(email, password));
     };
     
 

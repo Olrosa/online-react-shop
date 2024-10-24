@@ -20,10 +20,10 @@ const reducer = (state = initialState, action) => {
             }
             return {
                 ...state,
-                token: action.payload.token || null, // Устанавливаем токен из payload
-                authorization: !!action.payload.token, // Устанавливаем авторизацию на основе наличия токена
-                user: action.payload, // action.payload теперь содержит все данные пользователя
-                role: action.payload.role || 'user' // Устанавливаем роль
+                token: action.payload.token || null, 
+                authorization: !!action.payload.token, 
+                user: action.payload,
+                role: action.payload.role || 'user'
             };
 
         case 'PRODUCT_ADDED':
