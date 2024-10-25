@@ -11,6 +11,9 @@
         &:focus {
             outline: none;
         }
+        &-wrong {
+            border: 1px solid red;
+        }
         &-offer {
             display: flex;
             flex-direction: column;
@@ -47,6 +50,9 @@
         color: #868695;
         a {
             color: #EF0FCF;
+        }
+        &-danger {
+            color: red;
         }
     }
 }

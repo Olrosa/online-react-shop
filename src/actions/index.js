@@ -45,7 +45,7 @@ export const loginUser = (email, password) => {
                 dispatch(initApp({ ...userProfile, token: res.access_token, cart}));
             }
         } catch (error) {
-            console.error('Ошибка при авторизации:', error);
+            /* alert('Email or password is wrong') */
         }
     };
 };
