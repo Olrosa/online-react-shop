@@ -7,6 +7,7 @@ import {initializeSession } from '../../actions'
 import ProtectedRoute from "../protectedRoute/ProtectedRoute";
 
 import usePlatziService from "../../services/PlatziService";
+import useFirebaseService from "../../services/FirebaseService";
 
 import { MainPage, SingleProductPage, SingleCategoryPage, CartPage, LoginPage, AdminPage, ProfilePage, SignUpPage } from '../pages';
 
@@ -17,6 +18,7 @@ import './app.scss';
 
 const App = () => {
     const {getAllUsers} = usePlatziService();
+    const {saveAllUsersFromPlatziToDB} = useFirebaseService();
 
     const dispatch = useDispatch();
     const user = {};
@@ -25,6 +27,9 @@ const App = () => {
         dispatch(initializeSession());
     }, [dispatch]);
     
+    useEffect(() => {
+        saveAllUsersFromPlatziToDB();
+    }, [getAllUsers, saveAllUsersFromPlatziToDB])
 
     return (
         <Router>

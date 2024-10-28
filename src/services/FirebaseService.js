@@ -24,24 +24,31 @@ const useFirebaseService = () => {
 
     const saveAllUsersFromPlatziToDB = async () => {
         try {
-            const users = getAllUsers().then(data => JSON.stringify(data)); 
-            console.log(users);
-            const dbUsersRef = ref(database, `'users`);
-            users.forEach(user => {
-                const userData = JSON.parse(user);
-                const dbUserObject = {
-                    [`user_id-${userData.id}`]: {
-                        avatar: userData.avatar,
-                        creationAt: userData.creationAt,
-                        email: userData.email,
-                        name: userData.name,
-                        password: userData.password,
-                        role: userData.role,
-                        updatedAt: userData.updatedAt
+            const usersPromise = getAllUsers().then(data => JSON.stringify(data)); 
+            const users = usersPromise.then(x => {
+                console.log(x);
+                const dbUsersRef = ref(database, `users`);
+                const userArray = JSON.parse(x);
+                console.log(userArray.constructor.name); 
+                let i;
+                for (i = 0; i < userArray.length; i++) { 
+                    console.log(userArray[i].constructor.name);
+                    const userData = JSON.parse(JSON.stringify(userArray[i]));
+                    console.log(userData); 
+                    const dbUserObject = { 
+                        [`user_id-${userData.id}`]: {
+                            avatar: userData.avatar,
+                            creationAt: userData.creationAt,
+                            email: userData.email,
+                            name: userData.name,
+                            password: userData.password,
+                            role: userData.role,
+                            updatedAt: userData.updatedAt
+                        }
                     }
-                }
-
-                set(dbUsersRef, dbUserObject);
+                    
+                    push(dbUsersRef, dbUserObject); 
+                } 
             });
             return { success: true, message: "Users have been saved to the database." };
         } catch (error) {
