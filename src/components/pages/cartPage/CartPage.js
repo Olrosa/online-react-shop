@@ -7,12 +7,12 @@ import './cartPage.scss';
 
 const CartPage = () => {
     const dispatch = useDispatch();
-    const {cart} = useSelector(state => state);
+    const cart = useSelector(state => state.cart);
 
 
     const renderItems = (arr) => {
         return arr.map((item, i) => {
-            return <CartItem ket={i} item={item}/>
+            return <CartItem key={i} item={item}/>
         })
     }
 

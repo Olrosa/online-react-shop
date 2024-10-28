@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { productAdded } from '../../actions';
+import { productAddedToCart } from '../../actions';
 
 import './ProductsListItem.scss';
 import thumbnail from '../../resources/img/thumbnail.png';
@@ -11,7 +11,7 @@ const ProductsListItem = (props) => {
     const [buttonState, setButtonState] = useState({ text: 'To cart', color: '' });
     
     const dispatch = useDispatch();
-    const {user} = useSelector(state => state);
+    const user = useSelector(state => state.user);
 
     let {title, price, images, id} = props;
 
@@ -29,7 +29,7 @@ const ProductsListItem = (props) => {
             user: user
         };
 
-        dispatch(productAdded(newProduct));
+        dispatch(productAddedToCart(newProduct));
         setButtonState({ text: 'Added', color: '#33B241' });
         setTimeout(() => {
             setButtonState({ text: 'To cart', color: '' });

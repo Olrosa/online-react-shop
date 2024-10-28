@@ -1,36 +1,67 @@
 const initialState = {
     cart: [],
-    user: 'Olrosa',
-    role: 'user'
+    user: null,
+    role: 'user',
+    authorization: false,
+    token: null,
+    isLoading: true
 };
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case 'PRODUCT_ADDED':
+        case 'INIT_APP':
+            if (action.payload === false) {
+                return {
+                    ...state,
+                    token: null,
+                    authorization: false,
+                    user: null,
+                    role: 'user',
+                    isLoading: false // Завершаем загрузку
+                };
+            }
+            return {
+                ...state,
+                token: action.payload.token || null, 
+                authorization: !!action.payload.token, 
+                user: action.payload,
+                role: action.payload.role || 'user',
+                cart: action.payload.cart || [],
+                isLoading: false // Завершаем загрузку
+            };
+        case 'SET_CART':
+            return {
+                ...state,
+                cart: action.payload
+            }
+        case 'PRODUCT_ADDED_TO_CART':
             const existingProductIndex = state.cart.findIndex(item => item.id === action.payload.id);
-
+        
+            let updatedCart;
             if (existingProductIndex !== -1) {
                 // Обновляем количество для существующего товара
-                const updatedCart = [...state.cart];
+                updatedCart = [...state.cart];
                 updatedCart[existingProductIndex] = {
                     ...updatedCart[existingProductIndex],
                     quantity: updatedCart[existingProductIndex].quantity + action.payload.quantity, // Обновляем quantity
                     totalPrice: updatedCart[existingProductIndex].totalPrice + action.payload.totalPrice // Обновляем totalPrice
                 };
-                return {
-                    ...state,
-                    cart: updatedCart
-                };
             } else {
                 // Добавляем новый товар с полем quantity
-                return {
-                    ...state,
-                    cart: [
-                        ...state.cart,
-                        action.payload,
-                    ]
-                };
+                updatedCart = [
+                    ...state.cart,
+                    action.payload,
+                ];
             }
+        
+            // Сохраняем обновленную корзину в localStorage
+            localStorage.setItem('cart', JSON.stringify(updatedCart));
+        
+            return {
+                ...state,
+                cart: updatedCart
+            };
+            
         case 'QUANTITY_PRODUCT_UPDATED':
             const productIndex = state.cart.findIndex(
                 item => item.id === action.payload.id
@@ -54,7 +85,24 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 cart: filteredCart
             };
-
+        case 'LOGIN_SUCCESS':
+            return {
+                ...state,
+                user: action.payload.user,
+                token: action.payload.token,
+                authorization: true,
+                role: action.payload.role
+            };
+        case 'LOGOUT':
+            localStorage.clear()
+            return {
+                ...state,
+                user: null,
+                token: null,
+                authorization: false,
+                role: 'user',
+                isLoading: false
+            };
         default:
             return state;
     }

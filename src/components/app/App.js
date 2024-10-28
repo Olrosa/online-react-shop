@@ -1,8 +1,14 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Provider } from "react-redux";
-import store from '../../store/index';
 
-import { MainPage, SingleProductPage, SingleCategoryPage, CartPage } from '../pages';
+import {initializeSession } from '../../actions'
+
+import ProtectedRoute from "../protectedRoute/ProtectedRoute";
+
+import usePlatziService from "../../services/PlatziService";
+
+import { MainPage, SingleProductPage, SingleCategoryPage, CartPage, LoginPage, AdminPage, ProfilePage, SignUpPage } from '../pages';
 
 import Header from "../header/Header";
 import Footer from "../footer/Footer";
@@ -10,21 +16,50 @@ import Footer from "../footer/Footer";
 import './app.scss';
 
 const App = () => {
+    const {getAllUsers} = usePlatziService();
+
+    const dispatch = useDispatch();
+    const user = {};
+
+    useEffect(() => {
+        dispatch(initializeSession());
+    }, [dispatch]);
+    
+
     return (
-        <Provider store={store}>
-            <Router>
-                <Header/>
-                <main>
-                    <Routes>
-                        <Route path="/" element={<MainPage/>}/>
-                        <Route path="/products/:productId" element={<SingleProductPage/>}/>
-                        <Route path="/categories/:categoryId" element={<SingleCategoryPage/>}/>
-                        <Route path="/cart" element={<CartPage/>}/>
-                    </Routes>
-                </main>
-                <Footer/>
-            </Router>
-        </Provider>
+        <Router>
+            <Header/>
+            <main>
+                <Routes>
+                    <Route path="/" element={<MainPage/>}/>
+                    <Route path="/products/:productId" element={<SingleProductPage/>}/>
+                    <Route path="/categories/:categoryId" element={<SingleCategoryPage/>}/>
+                    <Route path="/login" element={<LoginPage/>}/>
+                    <Route path="/cart" element={<CartPage/>}/>
+
+                    {/* PROTECTED */}
+
+                    <Route path="/admin" element={
+                        <ProtectedRoute roles={['admin']}>
+                            <AdminPage/>
+                        </ProtectedRoute>
+                    }/>
+
+                    <Route path="/profile" element={
+                        <ProtectedRoute roles={['customer', 'admin']}>
+                            <ProfilePage/>
+                        </ProtectedRoute>
+                    }/>
+
+                    <Route path="/signup" element={
+                        <ProtectedRoute roles={['user']}>
+                            <SignUpPage/>
+                        </ProtectedRoute>
+                    }/>
+                </Routes>
+            </main>
+            <Footer/>
+        </Router>
     )
 }
 

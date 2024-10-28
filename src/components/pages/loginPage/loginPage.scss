@@ -1,0 +1,15 @@
+.login {
+    &__offer {
+        width: 300px;
+        margin: 0 auto;
+        padding: 50px;
+        border-radius: 10px;
+        background-color: #F4F5F7;
+    }
+    &__fields {
+        margin-top: 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+}
