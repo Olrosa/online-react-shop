@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import slide1 from '../../resources/slides/slide1.webp';
 import slide2 from '../../resources/slides/slide2.webp';
+import slide3 from '../../resources/slides/slide3.webp';
 
 import './banner.scss';
 import '../../style/slider.scss';
 
 const Banner = ({slideNum, autoplaySlider}) => {
     const slides = [
-        { img: slide1, num: 0}, { img: slide2, num: 1}
+        { img: slide1, num: 0}, { img: slide2, num: 1}, { img: slide3, num: 2}
     ];
 
     const [slide, setSlide] = useState(slides[slideNum]);
