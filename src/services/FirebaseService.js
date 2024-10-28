@@ -1,8 +1,6 @@
 import { ref, set, push, get, update, remove } from "firebase/database";
 import { database } from "../firebase/firebase";
-import usePlatziService from "../services/PlatziService/PlatziService";
-import { data } from "@remix-run/router";
-import { ErrorResponseImpl } from "@remix-run/router/dist/utils";
+import usePlatziService from "../services/PlatziService";
 
 const useFirebaseService = () => {
     const { 
@@ -22,6 +20,34 @@ const useFirebaseService = () => {
         const dbRef = ref(data, `${entity}`);
         const newEntRef = await push(dbRef);
         set(newEntRef, data); 
+    }
+
+    const saveAllUsersFromPlatziToDB = async () => {
+        try {
+            const users = getAllUsers().then(data => JSON.stringify(data)); 
+            console.log(users);
+            const dbUsersRef = ref(database, `'users`);
+            users.forEach(user => {
+                const userData = JSON.parse(user);
+                const dbUserObject = {
+                    [`user_id-${userData.id}`]: {
+                        avatar: userData.avatar,
+                        creationAt: userData.creationAt,
+                        email: userData.email,
+                        name: userData.name,
+                        password: userData.password,
+                        role: userData.role,
+                        updatedAt: userData.updatedAt
+                    }
+                }
+
+                set(dbUsersRef, dbUserObject);
+            });
+            return { success: true, message: "Users have been saved to the database." };
+        } catch (error) {
+            console.error("Error saving users from Platzi to the database: ", error);
+            return { success: false, message: error.message };
+        }
     }
 
     const createUserFromPlatziById = async (userId) => {
@@ -105,6 +131,7 @@ const useFirebaseService = () => {
 
     return {
         createUserFromPlatziById,
+        saveAllUsersFromPlatziToDB,
         createUser,
         readUserById,
         readAllUsers,
