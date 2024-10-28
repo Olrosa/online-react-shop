@@ -3,10 +3,14 @@ import { useState } from 'react';
 
 import {registrationUser} from '../../../actions';
 
+import usePlatziService from '../../../services/PlatziService';
+
 import './signUpPage.scss';
 
 const SignUpPage = () => {
     const dispatch = useDispatch();
+
+    const {checkEmail} = usePlatziService();
 
     const [errors, setErrors] = useState({
         name: "",
@@ -18,7 +22,7 @@ const SignUpPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const validateForm = () => {
+    const validateForm = async () => {
         let valid = true;
         const newErrors = {
             name: "",
@@ -34,21 +38,31 @@ const SignUpPage = () => {
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             newErrors.email = "Invalid email format";
             valid = false;
+        } else {
+            await checkEmail(email)
+                .then(res => {
+                    if (!res.isAvailable) {
+                        newErrors.email = "Email is already used";
+                        valid = false
+                    } 
+                })
         }
 
         if (password.length < 8) {
             newErrors.password = "Password must be at least 8 characters long";
             valid = false;
         }
+
+        
     
         setErrors(newErrors);
         return valid;
     };
     
 
-    const handleSignUp = (e) => {
+    const handleSignUp = async (e) => {
         e.preventDefault();
-        if (!validateForm()) {
+        if (!(await validateForm())) {
             console.error("Form validation failed");
             return;
         }
