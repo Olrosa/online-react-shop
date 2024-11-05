@@ -1,0 +1,30 @@
+.profile {
+    &__card {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+        width: 100%;
+        border-radius: 14px;
+    }
+    &__img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        cursor: pointer;
+    }
+    &__descr {
+        color: #868695;
+        font-size: 14px;
+    }
+    &__input {
+        width: 250px !important;
+        &-offer {
+            gap: 5px !important;
+        }
+    }
+    &__submit {
+        width: 270px !important;
+    }
+}

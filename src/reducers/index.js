@@ -1,5 +1,6 @@
 const initialState = {
     cart: [],
+    orders: [],
     user: null,
     role: 'user',
     authorization: false,
