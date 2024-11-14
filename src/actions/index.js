@@ -93,7 +93,11 @@ export const initializeSession = () => {
 export const changeUserData = (data, id) => {
     return async (dispatch) => {
         const token = localStorage.getItem('token');
-        const res = await updateUser(data, id, token);
-        dispatch(initApp());
+        let userData;
+        getUserProfile(token)
+            .then(res => userData = res)
+
+        const res = await updateUser(data, id);
+        dispatch(initApp(userData));
     }
 }

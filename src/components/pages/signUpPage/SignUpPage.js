@@ -10,7 +10,8 @@ import './signUpPage.scss';
 const SignUpPage = () => {
     const dispatch = useDispatch();
 
-    const {checkEmail} = usePlatziService();
+    const {updateUser} = usePlatziService();
+
 
     const [errors, setErrors] = useState({
         name: "",
