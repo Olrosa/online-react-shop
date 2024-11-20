@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -58,6 +59,7 @@ const ProductsList = ({ categoryId, limit, random = false }) => {
     function renderItems(arr, random) {
         const itemsArray = random ? [...arr].sort(() => Math.random() - 0.5) : arr;
         const items = itemsArray.map((item) => {
+            
             return <ProductsListItem {...item} key={item.id} />;
         });
     

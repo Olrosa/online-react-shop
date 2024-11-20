@@ -15,9 +15,9 @@ const Header = () => {
                     <Link to="/">
                         <img src={logo} className="header__logo" />
                     </Link>
-                    <button className='button' onClick={() => localStorage.clear()}>
+                   {/*  <button className='button' onClick={() => localStorage.clear()}>
                         clear storage
-                    </button>
+                    </button> */}
                     <form className="form">
                         <div className="form-input-container">
                             <input className="form-input form-input-search"/>
