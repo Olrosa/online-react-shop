@@ -1,6 +1,10 @@
 .card {
     width: calc(20% - 18px);
     justify-content: space-between;
+    .card {
+        width: 100%;
+        justify-content: space-between;
+    }
     &__img {
         position: relative;
         cursor: pointer;
