@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -57,12 +58,21 @@ const ProductsList = ({ categoryId, limit, random = false }) => {
 
     function renderItems(arr, random) {
         const itemsArray = random ? [...arr].sort(() => Math.random() - 0.5) : arr;
-        const items = itemsArray.map((item) => {
-            return <ProductsListItem {...item} key={item.id} />;
-        });
-    
+        const items = itemsArray.map((item, index) => (
+            <motion.div 
+                key={item.id}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                className="card"
+            >
+                <ProductsListItem {...item} />
+            </motion.div>
+        ));
+        
         return <div className="products__offer">{items}</div>;
     }
+    
 
     const items = renderItems(productsList);
 

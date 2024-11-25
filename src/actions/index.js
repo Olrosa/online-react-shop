@@ -1,4 +1,4 @@
-import { login, getUserProfile, createUser } from '../services/PlatziServiceWithoutHook';
+import { login, getUserProfile, createUser, updateUser } from '../services/PlatziServiceWithoutHook';
 
 export const productAddedToCart = (product) => ({
     type: 'PRODUCT_ADDED_TO_CART',
@@ -89,3 +89,15 @@ export const initializeSession = () => {
         }
     };
 };
+
+export const changeUserData = (data, id) => {
+    return async (dispatch) => {
+        const token = localStorage.getItem('token');
+        let userData;
+        getUserProfile(token)
+            .then(res => userData = res)
+
+        const res = await updateUser(data, id);
+        dispatch(initApp(userData));
+    }
+}

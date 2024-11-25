@@ -1,5 +1,6 @@
 const initialState = {
     cart: [],
+    orders: [],
     user: null,
     role: 'user',
     authorization: false,
@@ -10,6 +11,7 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case 'INIT_APP':
+            console.log(action.payload);
             if (action.payload === false) {
                 return {
                     ...state,

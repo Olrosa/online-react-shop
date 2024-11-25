@@ -40,3 +40,17 @@ export const createUser = async (name, email, password, avatar) => {
     });
     return res;
 }
+
+export const updateUser = async (data, id) => {
+    const body = JSON.stringify(data);
+
+    console.log(body);
+
+    const res = await requestWithoutHook(`${_apiBase}users/${id}`, 'PUT', body, {
+        'Content-Type': 'application/json'
+    });
+
+    console.log('user data is updated')
+
+    return res;
+}

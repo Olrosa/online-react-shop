@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import {registrationUser} from '../../../actions';
 
@@ -10,7 +10,8 @@ import './signUpPage.scss';
 const SignUpPage = () => {
     const dispatch = useDispatch();
 
-    const {checkEmail} = usePlatziService();
+    const {updateUser} = usePlatziService();
+
 
     const [errors, setErrors] = useState({
         name: "",
@@ -38,15 +39,16 @@ const SignUpPage = () => {
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             newErrors.email = "Invalid email format";
             valid = false;
-        } else {
+        } /* ВРЕМЕННО НЕ РАБОТАЕТ В API else {
             await checkEmail(email)
                 .then(res => {
+                    console.log(res, email)
                     if (!res.isAvailable) {
                         newErrors.email = "Email is already used";
                         valid = false
                     } 
                 })
-        }
+        } */
 
         if (password.length < 8) {
             newErrors.password = "Password must be at least 8 characters long";

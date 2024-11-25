@@ -1,9 +1,14 @@
 .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
     padding: 15px 0;
     width: 100%;
     background: url('../../resources/img/header_bg.webp');
     background-position: bottom;
     &__offer {
+        position: relative;
         display: flex;
         justify-content: space-between;
         align-items: center;
