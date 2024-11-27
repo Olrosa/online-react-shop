@@ -1,149 +1,147 @@
-import { ref, set, push, get, update, remove } from "firebase/database";
+import { ref, set, push, get, update, remove, query, equalTo, orderByChild, child } from "firebase/database";
 import { database } from "../firebase/firebase";
-import usePlatziService from "../services/PlatziService";
 
 const useFirebaseService = () => {
-    const { 
-        addUser, 
-        getUser, 
-        getAllUsers,
-        updateUser,
-        deleteUser,
-        addProduct,
-        getProduct,
-        getAllProducts,
-        updateProduct,
-        deleteProduct
-    } = usePlatziService();
-
-    const addNewEntry = async (data, entity) => {
-        const dbRef = ref(data, `${entity}`);
-        const newEntRef = await push(dbRef);
-        set(newEntRef, data); 
-    }
-
-    const saveAllUsersFromPlatziToDB = async () => {
-        try {
-            const usersPromise = getAllUsers().then(data => JSON.stringify(data)); 
-            const users = usersPromise.then(x => {
-                console.log(x);
-                const dbUsersRef = ref(database, `users`);
-                const userArray = JSON.parse(x);
-                console.log(userArray.constructor.name); 
-                let i;
-                for (i = 0; i < userArray.length; i++) { 
-                    console.log(userArray[i].constructor.name);
-                    const userData = JSON.parse(JSON.stringify(userArray[i]));
-                    console.log(userData); 
-                    const dbUserObject = { 
-                        [`user_id-${userData.id}`]: {
-                            avatar: userData.avatar,
-                            creationAt: userData.creationAt,
-                            email: userData.email,
-                            name: userData.name,
-                            password: userData.password,
-                            role: userData.role,
-                            updatedAt: userData.updatedAt
-                        }
-                    }
-                    
-                    push(dbUsersRef, dbUserObject); 
-                } 
-            });
-            return { success: true, message: "Users have been saved to the database." };
-        } catch (error) {
-            console.error("Error saving users from Platzi to the database: ", error);
-            return { success: false, message: error.message };
-        }
-    }
-
-    const createUserFromPlatziById = async (userId) => {
-        try {
-            const user = await getUser(userId);
-            const dbRef = ref(database, `users/${userId}`);
-            set(dbRef, user);
-            return {success: true, message: "User was saved to database."};
-        } catch (error) {
-            console.error("Error saving user to firebase: ", error);
-            return { success: false, message: error.message };
-        }
-    }
 
     const createUser = async (userData) => {
         try {
-            const createdUser = await addUser(userData);
-            const userRef = push(ref(database, `users`));
-            await set(userRef, createdUser);
-            return { success: true, message: "User was created and saved to database." };
-        } catch(error) {
+            // Check if a user with the same email already exists in the database
+            const usersRef = ref(database, `users`);
+            const userQuery = query(usersRef, orderByChild('id'), equalTo(userData.id));
+            const snapshot = await get(userQuery);
+    
+            if (snapshot.exists()) {
+                console.log("User already exists in the database.");
+                return { success: false, message: "User already exists in the database." };
+            }
+    
+            // Create the user and save to the database
+            const newUserRef = push(usersRef); // Create a unique reference for the new user
+            await set(newUserRef, userData);
+    
+            return { success: true, message: "User was created and saved to the database." };
+        } catch (error) {
             console.error("Failed creating user and saving to database: ", error);
             return { success: false, message: error.message };
         }
-    }
+    };
+
+    const readUser = async (userId) => {
+        try {
+            // Reference to the `users` node in the database
+            const usersRef = ref(database, `users`);
+            
+            // Fetch all users and search for the user with the matching ID
+            const snapshot = await get(usersRef);
+    
+            if (!snapshot.exists()) {
+                console.log("No users found in the database.");
+                return { success: false, message: "No users found in the database." };
+            }
+    
+            // Find the user by ID in the snapshot
+            const users = snapshot.val();
+            const userKey = Object.keys(users).find(key => users[key].id === userId);
+    
+            if (!userKey) {
+                console.log(`User with ID ${userId} does not exist.`);
+                return { success: false, message: `User with ID ${userId} does not exist.` };
+            }
+    
+            const user = users[userKey];
+    
+            return { success: true, message: "User found.", data: user };
+        } catch (error) {
+            console.error("Failed to read user from database: ", error);
+            return { success: false, message: error.message };
+        }
+    };
+
+    const updateUser = async (userId, newUserData) => {
+        try {
+            // Reference to the `users` node in the database
+            const usersRef = ref(database, `users`);
+    
+            // Fetch all users and search for the user with the matching ID
+            const snapshot = await get(usersRef);
+    
+            if (!snapshot.exists()) {
+                console.log("No users found in the database.");
+                return { success: false, message: "No users found in the database." };
+            }
+    
+            // Find the user by ID in the snapshot
+            const users = snapshot.val();
+            const userKey = Object.keys(users).find(key => users[key].id === userId);
+    
+            if (!userKey) {
+                console.log(`User with ID ${userId} does not exist.`);
+                return { success: false, message: `User with ID ${userId} does not exist.` };
+            }
+    
+            // Reference to the specific user node
+            const userRef = ref(database, `users/${userKey}`);
+    
+            // Apply updates to the user
+            await update(userRef, newUserData);
+    
+            return { success: true, message: "User updated successfully." };
+        } catch (error) {
+            console.error("Failed to update user in database: ", error);
+            return { success: false, message: error.message };
+        }
+    };
+
+    const deleteUser = async (userId) => {
+        try {
+            // Check if a user with the given email exists in the database
+            const usersRef = ref(database, `users`);
+            const userQuery = query(usersRef, orderByChild('id'), equalTo(userId));
+            const snapshot = await get(userQuery);
+    
+            if (!snapshot.exists()) {
+                console.log("User does not exist in the database.");
+                return { success: false, message: "User does not exist in the database." };
+            }
+    
+            // Get the first matching user's key
+            const firstMatch = Object.keys(snapshot.val())[0];
+            const userRef = ref(database, `users/${firstMatch}`);
+    
+            // Remove the first matching user
+            await remove(userRef);
+    
+            return { success: true, message: "User deleted successfully from the database." };
+        } catch (error) {
+            console.error("Failed to delete user from database: ", error);
+            return { success: false, message: error.message };
+        }
+    };
 
     const readAllUsers = async () => {
         try {
             const usersRef = ref(database, `users`);
-            const usersSnapshot = await get(usersRef);
-            if (usersSnapshot.exists()) {
-                return { success: true, data: usersSnapshot.val };
-            } else {
-                return { success: false, message: "No users in database." };
+            const snapshot = await get(usersRef);
+
+            if (!snapshot.exists()) {
+                console.log("No users in the database.");
+                return { success: false, message: "No users found in the database.", data: [] };
             }
-        } catch(error) {
-            console.error("Error reading all users from database: ", error);
-            return { success: false, message: error.message };
-        }
-    }
 
-    const readUserById = async (userId) => {
-        try {
-            const userRef = ref(database, `users/${userId}`);
-            const userSnapshot = await get(userRef);
-            if (userSnapshot.exists()) {
-                return { success: true, data: userSnapshot.val };
-            }
-            else {
-                return { success: false, message: `No user was found by id - ${userId}` };
-            }
+            const users = Object.values(snapshot.val());
+            return { success: true, message: "Users retrieved successfully.", data: users };
         } catch (error) {
-            console.error(`Error getting user by id - ${userId}: `, error);
-            return { success: false, message: error.message };
+            console.error("Failed to read users from database: ", error);
+            return { success: false, message: error.message, data: [] };
         }
-    }
-
-    const updateUserById = async (userId, newData) => {
-        try {
-            const userRef = ref(database, `users/${userId}`);
-            await update(userRef, newData);
-            return { success: true, message: "User was updated in the database." };
-        } catch (error) {
-            console.error("Error updating user in the database: ", error);
-            return { success: false, message: error.message };
-        }
-    }
-
-    const deleteUserById = async (userId) => {
-        try {
-            const userRef = ref(database, `users/${userId}`);
-            await remove(userRef);
-            return { success: true, message: `User with id - ${userId} was deleted from the database.` };
-        } catch (error) {
-            console.error(`Error deleting user by the id - ${userId} from the database: `, error);
-            return { success: false, message: error.message };
-        }
-    }
-
-
+    };
 
     return {
-        createUserFromPlatziById,
-        saveAllUsersFromPlatziToDB,
         createUser,
-        readUserById,
-        readAllUsers,
-        updateUserById,
-        deleteUserById
+        readUser,
+        updateUser,
+        deleteUser,
+        readAllUsers
     };
 }
 
